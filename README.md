@@ -1,7 +1,7 @@
 # Simulation-based Deep Learning for Flood and Debris Flow Mapping
 
 Code for the paper [Breaking the Limits of Remote Sensing by Simulation and Deep Learning for Flood and Debris Flow Mapping](https://arxiv.org/abs/2006.05180).
-
+![alt text](./data/dlsim_overview.png?raw=true)
 
 ## Installation
 If necessary create a new Python environment.
