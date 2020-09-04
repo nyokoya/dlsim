@@ -18,10 +18,10 @@ The datasets presented in the paper (Northern Kyushu 2017 and Western Japan 2018
 ## Training and Testing
 ```bash
 # To train on the Northern Kyushu 2017 dataset for flood mapping, for example.
-python dlsim.py --train_test train --type wl
+python dlsim.py --data NK2017 --train_test train --type wl
 
 # To test pretrained models
-python dlsim.py --train_test test --type wl
+python dlsim.py --data NK2017 --train_test test --type wl
 ```
 
 
