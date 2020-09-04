@@ -166,11 +166,11 @@ if args.data_split == 'scenario-wise':
         'bc': 'mosaic/bc_scenario-wise_train.tif',
         'sl': 'mosaic/sl_scenario-wise_train.tif',
     }
-    val_data = {
-        'wl': 'mosaic/wl_scenario-wise_val.tif',
-        'td': 'mosaic/td_scenario-wise_val.tif',
-        'bc': 'mosaic/bc_scenario-wise_val.tif',
-        'sl': 'mosaic/sl_scenario-wise_val.tif',
+    test_data = {
+        'wl': 'mosaic/wl_scenario-wise_test.tif',
+        'td': 'mosaic/td_scenario-wise_test.tif',
+        'bc': 'mosaic/bc_scenario-wise_test.tif',
+        'sl': 'mosaic/sl_scenario-wise_test.tif',
     }
 else:
     train_data = {
@@ -179,11 +179,11 @@ else:
         'bc': 'mosaic/bc.tif',
         'sl': 'mosaic/sl.tif',
     }
-    val_data = {
-        'wl': 'mosaic/wl_scenario-wise_val.tif',
-        'td': 'mosaic/td_scenario-wise_val.tif',
-        'bc': 'mosaic/bc_scenario-wise_val.tif',
-        'sl': 'mosaic/sl_scenario-wise_val.tif',
+    test_data = {
+        'wl': 'mosaic/wl_scenario-wise_test.tif',
+        'td': 'mosaic/td_scenario-wise_test.tif',
+        'bc': 'mosaic/bc_scenario-wise_test.tif',
+        'sl': 'mosaic/sl_scenario-wise_test.tif',
     }
     
 if args.loss == 'smoothl1':
@@ -262,8 +262,8 @@ pretrained_model.eval()
 
 stride_size = 128
 
-with Geotiffs(data_dir, args.img_size, stride_size, transform=test_transforms, **val_data) as val_dataset:
-    gt = imread(os.path.join(data_dir,val_data[args.type]))
+with Geotiffs(data_dir, args.img_size, stride_size, transform=test_transforms, **test_data) as test_dataset:
+    gt = imread(os.path.join(data_dir,test_data[args.type]))
     
     H = gt.shape[0]
     W = gt.shape[1]
@@ -275,12 +275,12 @@ with Geotiffs(data_dir, args.img_size, stride_size, transform=test_transforms, *
     
     mask = np.zeros((H,W,1))
     
-    print('num of test samples: ', len(val_dataset))
+    print('num of test samples: ', len(test_dataset))
     print('tile size: ', R, C)
         
-    for n in range(len(val_dataset)):
+    for n in range(len(test_dataset)):
 
-        input, output = val_dataset[n]
+        input, output = test_dataset[n]
         input = input.to(device).unsqueeze(0)
                 
         prediction = pretrained_model.predict(input)   
@@ -319,25 +319,37 @@ with Geotiffs(data_dir, args.img_size, stride_size, transform=test_transforms, *
 
 import time 
 
-test_real_data = {
-    'wl': 'SIM/wl_case0.tif',
-    'td': 'SIM/td_case0.tif',
-    'bc': 'RS/binary_change_dilate.tif',
-    'sl': 'DEM/slope.tif',
-}
+if args.data == 'NK2017':
+    test_real_data = {
+        'wl': 'SIM/wl_case0.tif',
+        'td': 'SIM/td_case0.tif',
+        'bc': 'RS/binary_change_dilate.tif',
+        'sl': 'DEM/slope.tif',
+    }
+elif args.data == 'WJ2018':
+    test_real_data = {
+        'wl': 'SIM/wl_case101.tif',
+        'td': 'SIM/td_case101.tif',
+        'bc': 'RS/binary_change_dilate.tif',
+        'sl': 'DEM/slope.tif',
+    }    
     
 stride_size = 8
 
 with Geotiffs(data_dir, args.img_size, stride_size, transform=test_real_transforms, **test_real_data) as test_real_dataset:
     
     bc_gt = imread(os.path.join(data_dir,'GT/gt.tif'))
-    valid = imread(os.path.join(data_dir,'GT/mask.tif'))
     
     gt = imread(os.path.join(data_dir,test_real_data[args.type]))
     valid = valid.squeeze()
     
     H = bc_gt.shape[0]
     W = bc_gt.shape[1]
+    
+    if args.data == 'NK2017':
+        valid = imread(os.path.join(data_dir,'GT/mask.tif'))
+    elif args.data == 'WJ2018':
+        valid = np.ones((H,W))
 
     R = (H - args.img_size) // stride_size + 1
     C = (W - args.img_size) // stride_size + 1
