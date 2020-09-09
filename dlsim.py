@@ -9,7 +9,6 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 import torchvision
 import tqdm
-import cv2
 import argparse
 import random
 from tifffile import imread, imwrite
