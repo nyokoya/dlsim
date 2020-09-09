@@ -339,9 +339,7 @@ stride_size = 8
 with Geotiffs(data_dir, args.img_size, stride_size, transform=test_real_transforms, **test_real_data) as test_real_dataset:
     
     bc_gt = imread(os.path.join(data_dir,'GT/gt.tif'))
-    
     gt = imread(os.path.join(data_dir,test_real_data[args.type]))
-    valid = valid.squeeze()
     
     H = bc_gt.shape[0]
     W = bc_gt.shape[1]
@@ -350,6 +348,7 @@ with Geotiffs(data_dir, args.img_size, stride_size, transform=test_real_transfor
         valid = imread(os.path.join(data_dir,'GT/mask.tif'))
     elif args.data == 'WJ2018':
         valid = np.ones((H,W))
+    valid = valid.squeeze()
 
     R = (H - args.img_size) // stride_size + 1
     C = (W - args.img_size) // stride_size + 1
