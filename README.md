@@ -12,7 +12,7 @@ pip install -r requirements.txt
 
 
 ## Dataset Preparation
-The datasets presented in the paper (Northern Kyushu 2017 and Western Japan 2018) can be download [here](https://naotoyokoya.com/). Please unzip the file in the directory `data`.
+The datasets presented in the paper (Northern Kyushu 2017 and Western Japan 2018) can be download [here](https://drive.google.com/file/d/1G3TWcCaEzDAUcF_QpX50qA5WDq0O1sZv/view?usp=sharing). Please unzip the file in the directory `data`.
 
 
 ## Training and Testing
